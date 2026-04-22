@@ -96,7 +96,7 @@ footer{text-align:center;padding:1.5em;font-family:var(--mono);font-size:.68em;
     <div class="brand">IGNF Weather System</div>
     <div class="city-name">Iligan City</div>
   </div>
-  <div class="timestamp"><span class="live-dot"></span>LIVE<br>April 22, 2026<br>05:00 PM PST</div>
+  <div class="timestamp"><span class="live-dot"></span>LIVE<br>April 22, 2026<br>05:02 PM PST</div>
 </header>
 <main>
   <div class="card card-temp">
@@ -174,158 +174,8 @@ const CURRENT = {
 };
 const HOURLY = [{"time": 0, "date": "2026-04-22", "temp": 24, "feels": 27, "humidity": 83, "wind": 5, "wind_deg": 186, "wind_dir": "S", "rain": 0, "cloud": 42, "desc": "Partly Cloudy ", "precip": 0.0, "pressure": 1010, "vis": 10}, {"time": 3, "date": "2026-04-22", "temp": 24, "feels": 26, "humidity": 87, "wind": 7, "wind_deg": 137, "wind_dir": "SE", "rain": 76, "cloud": 89, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1008, "vis": 10}, {"time": 6, "date": "2026-04-22", "temp": 24, "feels": 26, "humidity": 84, "wind": 6, "wind_deg": 119, "wind_dir": "ESE", "rain": 77, "cloud": 78, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1010, "vis": 10}, {"time": 9, "date": "2026-04-22", "temp": 29, "feels": 32, "humidity": 69, "wind": 7, "wind_deg": 313, "wind_dir": "NW", "rain": 100, "cloud": 89, "desc": "Patchy rain nearby", "precip": 0.1, "pressure": 1011, "vis": 10}, {"time": 12, "date": "2026-04-22", "temp": 30, "feels": 33, "humidity": 67, "wind": 12, "wind_deg": 321, "wind_dir": "NW", "rain": 67, "cloud": 79, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1009, "vis": 10}, {"time": 15, "date": "2026-04-22", "temp": 29, "feels": 32, "humidity": 70, "wind": 9, "wind_deg": 349, "wind_dir": "NNW", "rain": 100, "cloud": 87, "desc": "Patchy rain nearby", "precip": 0.1, "pressure": 1008, "vis": 10}, {"time": 18, "date": "2026-04-22", "temp": 26, "feels": 29, "humidity": 79, "wind": 2, "wind_deg": 328, "wind_dir": "NNW", "rain": 63, "cloud": 80, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1008, "vis": 10}, {"time": 21, "date": "2026-04-22", "temp": 25, "feels": 27, "humidity": 83, "wind": 5, "wind_deg": 168, "wind_dir": "SSE", "rain": 0, "cloud": 34, "desc": "Partly Cloudy ", "precip": 0.0, "pressure": 1010, "vis": 10}, {"time": 0, "date": "2026-04-23", "temp": 25, "feels": 28, "humidity": 82, "wind": 4, "wind_deg": 165, "wind_dir": "SSE", "rain": 0, "cloud": 46, "desc": "Partly Cloudy ", "precip": 0.0, "pressure": 1009, "vis": 10}, {"time": 3, "date": "2026-04-23", "temp": 25, "feels": 27, "humidity": 83, "wind": 5, "wind_deg": 152, "wind_dir": "SSE", "rain": 82, "cloud": 76, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1008, "vis": 10}, {"time": 6, "date": "2026-04-23", "temp": 25, "feels": 27, "humidity": 83, "wind": 4, "wind_deg": 162, "wind_dir": "SSE", "rain": 100, "cloud": 80, "desc": "Patchy rain nearby", "precip": 0.1, "pressure": 1010, "vis": 10}, {"time": 9, "date": "2026-04-23", "temp": 29, "feels": 32, "humidity": 72, "wind": 8, "wind_deg": 311, "wind_dir": "NW", "rain": 77, "cloud": 77, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1011, "vis": 10}, {"time": 12, "date": "2026-04-23", "temp": 30, "feels": 34, "humidity": 68, "wind": 11, "wind_deg": 319, "wind_dir": "NW", "rain": 100, "cloud": 74, "desc": "Patchy rain nearby", "precip": 0.1, "pressure": 1009, "vis": 10}, {"time": 15, "date": "2026-04-23", "temp": 29, "feels": 33, "humidity": 71, "wind": 10, "wind_deg": 339, "wind_dir": "NNW", "rain": 100, "cloud": 81, "desc": "Patchy rain nearby", "precip": 0.1, "pressure": 1008, "vis": 10}, {"time": 18, "date": "2026-04-23", "temp": 26, "feels": 29, "humidity": 82, "wind": 3, "wind_deg": 308, "wind_dir": "NW", "rain": 100, "cloud": 73, "desc": "Light rain shower", "precip": 1.3, "pressure": 1009, "vis": 10}, {"time": 21, "date": "2026-04-23", "temp": 25, "feels": 28, "humidity": 86, "wind": 6, "wind_deg": 151, "wind_dir": "SSE", "rain": 79, "cloud": 76, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1011, "vis": 10}, {"time": 0, "date": "2026-04-24", "temp": 25, "feels": 27, "humidity": 84, "wind": 4, "wind_deg": 166, "wind_dir": "SSE", "rain": 100, "cloud": 79, "desc": "Patchy rain nearby", "precip": 0.1, "pressure": 1009, "vis": 10}, {"time": 3, "date": "2026-04-24", "temp": 24, "feels": 27, "humidity": 84, "wind": 5, "wind_deg": 153, "wind_dir": "SSE", "rain": 100, "cloud": 86, "desc": "Patchy rain nearby", "precip": 0.3, "pressure": 1009, "vis": 9}, {"time": 6, "date": "2026-04-24", "temp": 24, "feels": 26, "humidity": 82, "wind": 6, "wind_deg": 146, "wind_dir": "SSE", "rain": 76, "cloud": 83, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1011, "vis": 10}, {"time": 9, "date": "2026-04-24", "temp": 30, "feels": 33, "humidity": 65, "wind": 6, "wind_deg": 332, "wind_dir": "NNW", "rain": 89, "cloud": 75, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1012, "vis": 10}, {"time": 12, "date": "2026-04-24", "temp": 30, "feels": 34, "humidity": 65, "wind": 10, "wind_deg": 328, "wind_dir": "NNW", "rain": 100, "cloud": 81, "desc": "Patchy rain nearby", "precip": 0.1, "pressure": 1010, "vis": 10}, {"time": 15, "date": "2026-04-24", "temp": 29, "feels": 33, "humidity": 70, "wind": 10, "wind_deg": 337, "wind_dir": "NNW", "rain": 100, "cloud": 75, "desc": "Patchy rain nearby", "precip": 0.3, "pressure": 1009, "vis": 9}, {"time": 18, "date": "2026-04-24", "temp": 27, "feels": 30, "humidity": 80, "wind": 3, "wind_deg": 358, "wind_dir": "N", "rain": 100, "cloud": 50, "desc": "Light rain shower", "precip": 0.2, "pressure": 1010, "vis": 10}, {"time": 21, "date": "2026-04-24", "temp": 25, "feels": 28, "humidity": 84, "wind": 4, "wind_deg": 140, "wind_dir": "SE", "rain": 0, "cloud": 20, "desc": "Clear ", "precip": 0.0, "pressure": 1012, "vis": 10}];
 
-// ── Iligan City LGU boundary — traced from official boundary map
-// Clockwise from northwest coast (Dalipuga area) going east along
-// northern boundary, south down the eastern edge, west along bottom,
-// then northwest back up the coast including the bay indent.
-const ILIGAN_BOUNDARY = [
-  // Northwest coast — Dalipuga / Sta. Filomena area
-  [8.310, 124.215],
-  [8.305, 124.210],
-  [8.298, 124.205],
-  [8.292, 124.202],
-  [8.288, 124.200],
-  // Coast curves down — Bonbonon / Kiwalan
-  [8.282, 124.198],
-  [8.276, 124.196],
-  [8.270, 124.195],
-  [8.265, 124.194],
-  [8.260, 124.195],
-  // Bay indent — dips west around Iligan port / Pala-o
-  [8.255, 124.210],
-  [8.250, 124.218],
-  [8.245, 124.222],
-  [8.240, 124.222],
-  // Bay bottom — Tubod / Camague coast
-  [8.235, 124.220],
-  [8.230, 124.216],
-  [8.225, 124.212],
-  [8.220, 124.210],
-  [8.215, 124.208],
-  // Southward coast — Maria Cristina / Suarez
-  [8.208, 124.205],
-  [8.202, 124.202],
-  [8.196, 124.198],
-  [8.190, 124.195],
-  // Boroon / Ditucalan area — coast bends inland then south
-  [8.183, 124.192],
-  [8.176, 124.188],
-  [8.170, 124.185],
-  [8.163, 124.183],
-  [8.156, 124.182],
-  [8.150, 124.183],
-  [8.144, 124.185],
-  // Bottom-left — Mantampay / Nangka, boundary turns east
-  [8.138, 124.188],
-  [8.133, 124.193],
-  [8.128, 124.198],
-  [8.123, 124.203],
-  [8.118, 124.208],
-  [8.113, 124.212],
-  [8.108, 124.215],
-  [8.103, 124.215],
-  [8.098, 124.213],
-  // Southern boundary going east — Abuno / Tagoloan II direction
-  [8.093, 124.218],
-  [8.090, 124.228],
-  [8.088, 124.238],
-  [8.087, 124.250],
-  [8.087, 124.262],
-  [8.088, 124.275],
-  [8.090, 124.288],
-  [8.092, 124.300],
-  // Southeast — Inoroganan / Kalilangan, boundary dips then turns SE
-  [8.093, 124.315],
-  [8.093, 124.328],
-  [8.092, 124.342],
-  [8.090, 124.355],
-  // Eastern peninsula narrows going south — Dagumbaan / Lantud
-  [8.088, 124.368],
-  [8.085, 124.378],
-  [8.080, 124.385],
-  [8.074, 124.390],
-  [8.068, 124.393],
-  [8.062, 124.393],
-  [8.056, 124.390],
-  // Narrow southern tip going down toward Buhong
-  [8.050, 124.385],
-  [8.044, 124.380],
-  [8.038, 124.375],
-  [8.032, 124.372],
-  [8.025, 124.370],
-  [8.018, 124.368],
-  [8.010, 124.367],
-  // Bottom tip
-  [8.003, 124.367],
-  [7.998, 124.368],
-  // Back up the eastern side — Cala-wigan / Ga-as
-  [8.005, 124.375],
-  [8.012, 124.382],
-  [8.018, 124.390],
-  [8.025, 124.398],
-  [8.032, 124.405],
-  [8.040, 124.410],
-  [8.048, 124.413],
-  // Northeast edge — Barat / Dagumbaan going north
-  [8.058, 124.415],
-  [8.068, 124.415],
-  [8.078, 124.412],
-  [8.088, 124.408],
-  [8.098, 124.405],
-  // East boundary going north — Ticapoloan / Talakag boundary
-  [8.110, 124.408],
-  [8.122, 124.410],
-  [8.133, 124.410],
-  [8.143, 124.408],
-  [8.152, 124.405],
-  [8.160, 124.400],
-  // Northeast — Rogongon area
-  [8.168, 124.395],
-  [8.175, 124.390],
-  [8.182, 124.385],
-  [8.190, 124.382],
-  [8.198, 124.380],
-  [8.207, 124.380],
-  [8.216, 124.380],
-  [8.225, 124.378],
-  // Northern right edge — toward Tumpao
-  [8.233, 124.372],
-  [8.240, 124.365],
-  [8.247, 124.358],
-  [8.253, 124.350],
-  [8.258, 124.342],
-  [8.263, 124.335],
-  // Tumpao / top-right
-  [8.268, 124.327],
-  [8.272, 124.318],
-  [8.275, 124.308],
-  [8.276, 124.298],
-  [8.276, 124.288],
-  [8.274, 124.278],
-  [8.271, 124.268],
-  // Top edge going west — Mainit / Betahon / Hindang
-  [8.268, 124.258],
-  [8.267, 124.248],
-  [8.266, 124.238],
-  [8.267, 124.228],
-  [8.270, 124.218],
-  // Top-left — Buawan / Bunawan heading back to coast
-  [8.275, 124.228],
-  [8.280, 124.235],
-  [8.285, 124.238],
-  [8.290, 124.238],
-  [8.295, 124.235],
-  [8.300, 124.230],
-  [8.305, 124.224],
-  // Back to Dalipuga northwest start
-  [8.310, 124.218],
-  [8.310, 124.215],
-];
-
 const ILIGAN_CENTER = [8.228, 124.245];
 const DEFAULT_ZOOM  = 13;
-
-// ── Colour helpers ──────────────────────────────────────
 function interpColor(stops, val) {
   for (let i=1; i<stops.length; i++) {
     const [lo,cLo]=stops[i-1],[hi,cHi]=stops[i];
@@ -387,25 +237,14 @@ function geo2px(lat, lon) {
   return [pt.x, pt.y];
 }
 
-// Build a canvas Path2D from the boundary polygon (projected to current view)
-function buildBoundaryPath() {
-  const path = new Path2D();
-  ILIGAN_BOUNDARY.forEach(([lat,lon],i) => {
-    const [x,y] = geo2px(lat,lon);
-    i===0 ? path.moveTo(x,y) : path.lineTo(x,y);
-  });
-  path.closePath();
-  return path;
-}
-
 function drawWindBarb(x,y,deg,spd) {
   if (spd<0.5) {
     octx.beginPath(); octx.arc(x,y,3,0,Math.PI*2);
-    octx.strokeStyle='rgba(20,20,60,0.9)'; octx.lineWidth=1.4; octx.stroke(); return;
+    octx.strokeStyle='rgba(255,255,255,0.85)'; octx.lineWidth=1.4; octx.stroke(); return;
   }
   const rad=deg*Math.PI/180, len=18;
   const tx=x+Math.sin(rad)*len, ty=y-Math.cos(rad)*len;
-  octx.strokeStyle='rgba(20,20,60,0.88)'; octx.lineWidth=1.6;
+  octx.strokeStyle='rgba(255,255,255,0.88)'; octx.lineWidth=1.6;
   octx.beginPath(); octx.moveTo(x,y); octx.lineTo(tx,ty); octx.stroke();
   const barbs=Math.round(spd/10), perp=(deg+90)*Math.PI/180;
   for (let b=0;b<Math.min(barbs,5);b++) {
@@ -416,7 +255,7 @@ function drawWindBarb(x,y,deg,spd) {
   octx.beginPath(); octx.moveTo(x,y);
   octx.lineTo(x-Math.sin(rad+.4)*3.5, y+Math.cos(rad+.4)*3.5);
   octx.lineTo(x-Math.sin(rad-.4)*3.5, y+Math.cos(rad-.4)*3.5);
-  octx.closePath(); octx.fillStyle='rgba(20,20,60,0.88)'; octx.fill();
+  octx.closePath(); octx.fillStyle='rgba(255,255,255,0.88)'; octx.fill();
 }
 
 function drawIGNFOverlay() {
@@ -426,43 +265,16 @@ function drawIGNFOverlay() {
   overlayCanvas.height = H;
   octx.clearRect(0,0,W,H);
 
-  // ── 1. Dark blur mask — everything OUTSIDE Iligan boundary ──
-  // Draw the outside mask: full rect minus the Iligan polygon
-  const boundary = buildBoundaryPath();
+  // ── Fixed geographic bounds of Iligan City LGU ──────────
+  // Overlay cells only drawn inside this lat/lon box —
+  // geo2px projects each cell to wherever it falls on screen,
+  // so panning/zooming keeps every blob anchored to its spot.
+  const ILI_N = 8.310, ILI_S = 7.998;
+  const ILI_W = 124.182, ILI_E = 124.415;
 
-  // Full-canvas minus city = the "outside" region
-  const outside = new Path2D();
-  outside.rect(0,0,W,H);   // entire canvas
-  // subtract the city area using evenodd fill (canvas does this with
-  // save/clip trick instead — we use compositing below)
-
-  // Draw full dark overlay first
-  octx.save();
-  octx.fillStyle='rgba(10,14,24,0.62)';
-  octx.fillRect(0,0,W,H);
-  // Punch hole where Iligan is — erase the dark mask inside city bounds
-  octx.globalCompositeOperation='destination-out';
-  octx.fill(boundary);
-  octx.restore();
-
-  // Optional: soft blur border around the boundary edge
-  // (draw a slightly expanded semi-transparent ring)
-  octx.save();
-  octx.strokeStyle='rgba(30,60,120,0.55)';
-  octx.lineWidth=18;
-  octx.filter='blur(6px)';
-  octx.stroke(boundary);
-  octx.filter='none';
-  octx.restore();
-
-  // ── 2. Weather heatmap — clipped to Iligan boundary only ────
-  octx.save();
-  octx.clip(boundary);
-
-  const vb   = lmap.getBounds();
-  const COLS = 22, ROWS = 18;
-  const dlat = (vb.getNorth()-vb.getSouth())/ROWS;
-  const dlon = (vb.getEast()-vb.getWest())/COLS;
+  const COLS = 20, ROWS = 24;   // more rows because city is tall/narrow
+  const dlat = (ILI_N - ILI_S) / ROWS;
+  const dlon = (ILI_E - ILI_W) / COLS;
 
   let grid, colorFn;
   if      (activeLayer==='wind')  { grid=windGrid(COLS,ROWS);  colorFn=(g)=>windColor(typeof g==='object'?g.spd:g); }
@@ -470,46 +282,63 @@ function drawIGNFOverlay() {
   else if (activeLayer==='temp')  { grid=tempGrid(COLS,ROWS);  colorFn=tempColor; }
   else                            { grid=cloudGrid(COLS,ROWS); colorFn=cloudColor; }
 
+  // ── Heatmap: Gaussian-blended circles anchored to geo coords ─
+  // Each cell is a soft radial gradient blob, not a hard rectangle.
+  // Blending overlapping blobs gives a smooth radar-like field.
   for (let r=0;r<ROWS;r++) {
     for (let c=0;c<COLS;c++) {
-      const lat=vb.getNorth()-(r+.5)*dlat;
-      const lon=vb.getWest() +(c+.5)*dlon;
-      const [x,y]=geo2px(lat,lon);
-      const pxW = Math.abs(geo2px(lat,lon+dlon)[0]-x)+2;
-      const pxH = Math.abs(geo2px(lat+dlat,lon)[1]-y)+2;
-      const val=grid[r*COLS+c];
-      octx.fillStyle=rgba(colorFn(val), 0.58);
-      octx.fillRect(x-pxW/2, y-pxH/2, pxW, pxH);
+      const lat = ILI_N - (r + 0.5) * dlat;
+      const lon = ILI_W + (c + 0.5) * dlon;
+      const [x,y] = geo2px(lat, lon);
+
+      // Pixel size of one cell at current zoom
+      const [x2]  = geo2px(lat, lon + dlon);
+      const [,y2] = geo2px(lat - dlat, lon);
+      const rX = Math.abs(x2 - x) * 0.85;
+      const rY = Math.abs(y2 - y) * 0.85;
+      const r0 = Math.max(rX, rY);
+
+      const val = grid[r*COLS+c];
+      const col = colorFn(val);
+
+      // Radial gradient blob — transparent at edge, solid at centre
+      const grad = octx.createRadialGradient(x,y,0, x,y,r0);
+      grad.addColorStop(0,   rgba(col, 0.62));
+      grad.addColorStop(0.6, rgba(col, 0.45));
+      grad.addColorStop(1,   rgba(col, 0));
+
+      octx.beginPath();
+      octx.ellipse(x, y, rX, rY, 0, 0, Math.PI*2);
+      octx.fillStyle = grad;
+      octx.fill();
     }
   }
 
-  // ── 3. Wind barbs — clipped to Iligan only ──────────────────
+  // ── Wind barbs: geo-anchored coarse grid over Iligan ────────
   if (activeLayer==='wind') {
-    const GC=10, GR=8;
+    const GC=8, GR=10;
     const bg=windGrid(GC,GR);
-    const gdlat=(vb.getNorth()-vb.getSouth())/GR;
-    const gdlon=(vb.getEast()-vb.getWest())/GC;
+    const gdlat=(ILI_N-ILI_S)/GR;
+    const gdlon=(ILI_E-ILI_W)/GC;
     for (let r=0;r<GR;r++) for (let c=0;c<GC;c++) {
-      const lat=vb.getNorth()-(r+.5)*gdlat;
-      const lon=vb.getWest() +(c+.5)*gdlon;
-      const [x,y]=geo2px(lat,lon);
-      const g=bg[r*GC+c];
-      drawWindBarb(x,y,g.deg,g.spd);
+      const lat = ILI_N - (r + 0.5) * gdlat;
+      const lon = ILI_W + (c + 0.5) * gdlon;
+      const [x,y] = geo2px(lat, lon);
+      // Only draw if the projected point is visible on screen
+      if (x < -20 || x > W+20 || y < -20 || y > H+20) continue;
+      const g = bg[r*GC+c];
+      drawWindBarb(x, y, g.deg, g.spd);
     }
   }
 
-  octx.restore(); // end city clip
+  // ── Watermark ────────────────────────────────────────────────
+  octx.font='bold 10px "Share Tech Mono",monospace';
+  octx.fillStyle='rgba(255,255,255,0.28)';
+  octx.textAlign='right';
+  octx.fillText('IGNF WEATHER SYSTEM', W-10, H-8);
 
-  // ── 4. Boundary outline ─────────────────────────────────────
-  octx.save();
-  octx.strokeStyle='rgba(80,140,255,0.7)';
-  octx.lineWidth=2;
-  octx.setLineDash([6,3]);
-  octx.stroke(boundary);
-  octx.setLineDash([]);
-  octx.restore();
-
-  // ── 5. Watermark ────────────────────────────────────────────
+  updateLegend();
+}
   octx.font='bold 10px "Share Tech Mono",monospace';
   octx.fillStyle='rgba(255,255,255,0.28)';
   octx.textAlign='right';

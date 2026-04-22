@@ -96,7 +96,7 @@ footer{text-align:center;padding:1.5em;font-family:var(--mono);font-size:.68em;
     <div class="brand">IGNF Weather System</div>
     <div class="city-name">Iligan City</div>
   </div>
-  <div class="timestamp"><span class="live-dot"></span>LIVE<br>April 22, 2026<br>05:10 PM PST</div>
+  <div class="timestamp"><span class="live-dot"></span>LIVE<br>April 22, 2026<br>05:12 PM PST</div>
 </header>
 <main>
   <div class="card card-temp">
@@ -176,6 +176,7 @@ const HOURLY = [{"time": 0, "date": "2026-04-22", "temp": 24, "feels": 27, "humi
 
 const ILIGAN_CENTER = [8.228, 124.245];
 const DEFAULT_ZOOM  = 13;
+// ── Colour helpers ──────────────────────────────────────
 function interpColor(stops, val) {
   for (let i=1; i<stops.length; i++) {
     const [lo,cLo]=stops[i-1],[hi,cHi]=stops[i];
@@ -184,10 +185,11 @@ function interpColor(stops, val) {
   return stops[stops.length-1][1];
 }
 function rgba(a,alpha) { return `rgba(${a[0]},${a[1]},${a[2]},${alpha})`; }
-function windColor(s)  { return interpColor([[0,[100,180,255]],[20,[60,200,100]],[45,[255,200,30]],[70,[255,80,20]],[90,[200,0,0]]],Math.min(s,90)); }
-function rainColor(p)  { return interpColor([[0,[180,220,255]],[25,[80,150,255]],[60,[20,60,220]],[100,[0,0,120]]],p); }
-function tempColor(c)  { return interpColor([[18,[80,140,255]],[24,[60,200,100]],[28,[200,230,40]],[32,[255,160,0]],[38,[220,20,0]]],Math.min(Math.max(c,18),38)); }
-function cloudColor(p) { return interpColor([[0,[160,200,240]],[40,[190,210,230]],[70,[200,200,200]],[100,[230,230,230]]],p); }
+// NOAA WSR-88D style colour scales
+function windColor(s)  { return interpColor([[0,[0,236,255]],[15,[0,200,100]],[30,[255,240,0]],[50,[255,120,0]],[70,[255,0,0]],[90,[180,0,200]]],Math.min(s,90)); }
+function rainColor(p)  { return interpColor([[0,[0,220,255]],[15,[0,150,255]],[35,[0,50,220]],[55,[140,0,220]],[75,[255,0,100]],[100,[255,255,255]]],p); }
+function tempColor(c)  { return interpColor([[18,[0,60,255]],[22,[0,200,210]],[26,[0,220,80]],[30,[255,220,0]],[34,[255,80,0]],[38,[200,0,0]]],Math.min(Math.max(c,18),38)); }
+function cloudColor(p) { return interpColor([[0,[10,10,40]],[25,[20,60,160]],[55,[80,140,220]],[80,[180,200,230]],[100,[235,240,255]]],p); }
 
 // ── Grid value builders ─────────────────────────────────
 function buildGrid(cols,rows,fn) {
@@ -208,7 +210,6 @@ const lmap = L.map('ignf-leaflet',{
   center:ILIGAN_CENTER, zoom:DEFAULT_ZOOM,
   zoomControl:true, attributionControl:true,
 });
-
 L.tileLayer(
   'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
   {attribution:'Tiles &copy; Esri &mdash; DigitalGlobe, GeoEye, USDA, USGS', maxZoom:19, maxNativeZoom:18}
@@ -226,53 +227,61 @@ L.circleMarker([8.228,124.245],{radius:7,color:'#cc2200',fillColor:'#cc2200',fil
   .bindTooltip('<b>Iligan City</b>',{permanent:true,direction:'right',offset:[8,0],className:'ignf-tip'})
   .addTo(lmap);
 
-// ── Overlay canvas (covers full map div, clipped to Iligan) ─
+// ── Overlay canvas ───────────────────────────────────────
 const overlayCanvas = document.getElementById('ignf-overlay');
 const octx          = overlayCanvas.getContext('2d');
 let   activeLayer   = 'wind';
 
-// Convert a geographic [lat,lon] to canvas pixel {x,y}
 function geo2px(lat, lon) {
   const pt = lmap.latLngToContainerPoint(L.latLng(lat,lon));
   return [pt.x, pt.y];
 }
 
-function drawWindBarb(x,y,deg,spd) {
-  if (spd<0.5) {
-    octx.beginPath(); octx.arc(x,y,3,0,Math.PI*2);
-    octx.strokeStyle='rgba(255,255,255,0.85)'; octx.lineWidth=1.4; octx.stroke(); return;
+// ── Pipe streamline: a row of | symbols curved along wind flow ─
+// Each | is a short stroke rotated to the wind heading.
+// They fan out from the origin point tracing the flow path.
+function drawPipeStreamline(x, y, deg, spd) {
+  if (spd < 0.5) return;
+  // Convert meteorological degrees (clockwise from N) to canvas radians
+  const rad  = (deg - 90) * Math.PI / 180;
+  const plen = 9 + Math.min(spd * 0.2, 8);   // | height scales with speed
+  const gap  = plen * 2.2;                    // spacing between pipes
+  const n    = 5;                             // number of | per streamline
+
+  for (let i = 0; i < n; i++) {
+    // Slight sine-curve offset gives curved flow feel
+    const curve = Math.sin(i / n * Math.PI) * 4;
+    const perp  = rad + Math.PI / 2;
+    const cx = x + Math.cos(rad) * gap * i + Math.cos(perp) * curve;
+    const cy = y + Math.sin(rad) * gap * i + Math.sin(perp) * curve;
+
+    octx.save();
+    octx.translate(cx, cy);
+    octx.rotate(rad + Math.PI / 2);
+    octx.beginPath();
+    octx.moveTo(0, -plen / 2);
+    octx.lineTo(0,  plen / 2);
+    octx.strokeStyle = `rgba(255,255,255,${(0.9 - i * 0.14).toFixed(2)})`;
+    octx.lineWidth   = 1.8;
+    octx.lineCap     = 'round';
+    octx.stroke();
+    octx.restore();
   }
-  const rad=deg*Math.PI/180, len=18;
-  const tx=x+Math.sin(rad)*len, ty=y-Math.cos(rad)*len;
-  octx.strokeStyle='rgba(255,255,255,0.88)'; octx.lineWidth=1.6;
-  octx.beginPath(); octx.moveTo(x,y); octx.lineTo(tx,ty); octx.stroke();
-  const barbs=Math.round(spd/10), perp=(deg+90)*Math.PI/180;
-  for (let b=0;b<Math.min(barbs,5);b++) {
-    const bx=tx-Math.sin(rad)*(b*4), by=ty+Math.cos(rad)*(b*4);
-    octx.beginPath(); octx.moveTo(bx,by);
-    octx.lineTo(bx+Math.sin(perp)*8, by-Math.cos(perp)*8); octx.stroke();
-  }
-  octx.beginPath(); octx.moveTo(x,y);
-  octx.lineTo(x-Math.sin(rad+.4)*3.5, y+Math.cos(rad+.4)*3.5);
-  octx.lineTo(x-Math.sin(rad-.4)*3.5, y+Math.cos(rad-.4)*3.5);
-  octx.closePath(); octx.fillStyle='rgba(255,255,255,0.88)'; octx.fill();
 }
 
 function drawIGNFOverlay() {
   const wrap = document.getElementById('ignf-map-wrap');
-  const W    = wrap.clientWidth, H = wrap.clientHeight;
+  const W = wrap.clientWidth, H = wrap.clientHeight;
   overlayCanvas.width  = W;
   overlayCanvas.height = H;
-  octx.clearRect(0,0,W,H);
+  octx.clearRect(0, 0, W, H);
 
-  // ── Fixed geographic bounds of Iligan City LGU ──────────
-  // Overlay cells only drawn inside this lat/lon box —
-  // geo2px projects each cell to wherever it falls on screen,
-  // so panning/zooming keeps every blob anchored to its spot.
+  // Iligan City bounding box (official LGU extent)
   const ILI_N = 8.310, ILI_S = 7.998;
   const ILI_W = 124.182, ILI_E = 124.415;
 
-  const COLS = 20, ROWS = 24;   // more rows because city is tall/narrow
+  // NOAA WSR-88D style: coarse pixel grid — blocky colored squares
+  const COLS = 28, ROWS = 36;
   const dlat = (ILI_N - ILI_S) / ROWS;
   const dlon = (ILI_E - ILI_W) / COLS;
 
@@ -282,72 +291,59 @@ function drawIGNFOverlay() {
   else if (activeLayer==='temp')  { grid=tempGrid(COLS,ROWS);  colorFn=tempColor; }
   else                            { grid=cloudGrid(COLS,ROWS); colorFn=cloudColor; }
 
-  // ── Heatmap: Gaussian-blended circles anchored to geo coords ─
-  // Each cell is a soft radial gradient blob, not a hard rectangle.
-  // Blending overlapping blobs gives a smooth radar-like field.
-  for (let r=0;r<ROWS;r++) {
-    for (let c=0;c<COLS;c++) {
-      const lat = ILI_N - (r + 0.5) * dlat;
-      const lon = ILI_W + (c + 0.5) * dlon;
-      const [x,y] = geo2px(lat, lon);
+  // Draw each cell as a hard-edged geographic rectangle (no blending)
+  // This gives the authentic NOAA blocky radar pixel look.
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const lat0 = ILI_N - r * dlat;
+      const lat1 = ILI_N - (r + 1) * dlat;
+      const lon0 = ILI_W + c * dlon;
+      const lon1 = ILI_W + (c + 1) * dlon;
 
-      // Pixel size of one cell at current zoom
-      const [x2]  = geo2px(lat, lon + dlon);
-      const [,y2] = geo2px(lat - dlat, lon);
-      const rX = Math.abs(x2 - x) * 0.85;
-      const rY = Math.abs(y2 - y) * 0.85;
-      const r0 = Math.max(rX, rY);
+      const [x0, y0] = geo2px(lat0, lon0);   // top-left corner
+      const [x1, y1] = geo2px(lat1, lon1);   // bottom-right corner
 
-      const val = grid[r*COLS+c];
+      const px = Math.min(x0, x1);
+      const py = Math.min(y0, y1);
+      const pw = Math.abs(x1 - x0);
+      const ph = Math.abs(y1 - y0);
+
+      if (px+pw < 0 || px > W || py+ph < 0 || py > H) continue;
+
+      const val = grid[r * COLS + c];
       const col = colorFn(val);
-
-      // Radial gradient blob — transparent at edge, solid at centre
-      const grad = octx.createRadialGradient(x,y,0, x,y,r0);
-      grad.addColorStop(0,   rgba(col, 0.62));
-      grad.addColorStop(0.6, rgba(col, 0.45));
-      grad.addColorStop(1,   rgba(col, 0));
-
-      octx.beginPath();
-      octx.ellipse(x, y, rX, rY, 0, 0, Math.PI*2);
-      octx.fillStyle = grad;
-      octx.fill();
+      octx.fillStyle = rgba(col, 0.75);
+      octx.fillRect(Math.round(px), Math.round(py), Math.round(pw)+1, Math.round(ph)+1);
     }
   }
 
-  // ── Wind barbs: geo-anchored coarse grid over Iligan ────────
-  if (activeLayer==='wind') {
-    const GC=8, GR=10;
-    const bg=windGrid(GC,GR);
-    const gdlat=(ILI_N-ILI_S)/GR;
-    const gdlon=(ILI_E-ILI_W)/GC;
-    for (let r=0;r<GR;r++) for (let c=0;c<GC;c++) {
-      const lat = ILI_N - (r + 0.5) * gdlat;
-      const lon = ILI_W + (c + 0.5) * gdlon;
-      const [x,y] = geo2px(lat, lon);
-      // Only draw if the projected point is visible on screen
-      if (x < -20 || x > W+20 || y < -20 || y > H+20) continue;
-      const g = bg[r*GC+c];
-      drawWindBarb(x, y, g.deg, g.spd);
+  // Pipe streamlines on wind layer — | symbols following flow direction
+  if (activeLayer === 'wind') {
+    const GC = 10, GR = 13;
+    const bg    = windGrid(GC, GR);
+    const gdlat = (ILI_N - ILI_S) / GR;
+    const gdlon = (ILI_E - ILI_W) / GC;
+    for (let r = 0; r < GR; r++) {
+      for (let c = 0; c < GC; c++) {
+        const lat = ILI_N - (r + 0.5) * gdlat;
+        const lon = ILI_W + (c + 0.5) * gdlon;
+        const [x, y] = geo2px(lat, lon);
+        if (x < -60 || x > W+60 || y < -60 || y > H+60) continue;
+        const g = bg[r * GC + c];
+        drawPipeStreamline(x, y, g.deg, g.spd);
+      }
     }
   }
 
-  // ── Watermark ────────────────────────────────────────────────
-  octx.font='bold 10px "Share Tech Mono",monospace';
-  octx.fillStyle='rgba(255,255,255,0.28)';
-  octx.textAlign='right';
-  octx.fillText('IGNF WEATHER SYSTEM', W-10, H-8);
-
-  updateLegend();
-}
-  octx.font='bold 10px "Share Tech Mono",monospace';
-  octx.fillStyle='rgba(255,255,255,0.28)';
-  octx.textAlign='right';
+  // Watermark
+  octx.font      = 'bold 10px "Share Tech Mono",monospace';
+  octx.fillStyle = 'rgba(255,255,255,0.28)';
+  octx.textAlign = 'right';
   octx.fillText('IGNF WEATHER SYSTEM', W-10, H-8);
 
   updateLegend();
 }
 
-// Redraw every time the map moves, zooms, or resizes
 lmap.on('move zoom resize viewreset', drawIGNFOverlay);
 lmap.whenReady(() => setTimeout(drawIGNFOverlay, 200));
 
@@ -358,19 +354,19 @@ function updateLegend() {
   const bc=bar.getContext('2d');
   const grd=bc.createLinearGradient(0,0,120,0);
   if (activeLayer==='wind') {
-    [[0,'#64b4ff'],[.25,'#3cc864'],[.55,'#ffc81e'],[.8,'#ff5014'],[1,'#c80000']].forEach(([s,c])=>grd.addColorStop(s,c));
+    [[0,'#00ecff'],[.18,'#00c864'],[.36,'#fff000'],[.58,'#ff7800'],[.8,'#ff0000'],[1,'#b400c8']].forEach(([s,c])=>grd.addColorStop(s,c));
     lbl.textContent='0 — 90+ km/h';
     extra.textContent=`Now: ${CURRENT.windSpd} km/h @ ${Math.round(CURRENT.windDeg)}°`;
   } else if (activeLayer==='rain') {
-    [[0,'#b4dcff'],[.3,'#5096ff'],[.7,'#1440dc'],[1,'#00006e']].forEach(([s,c])=>grd.addColorStop(s,c));
+    [[0,'#00dcff'],[.2,'#0096ff'],[.45,'#0032dc'],[.65,'#8c00dc'],[.85,'#ff0064'],[1,'#ffffff']].forEach(([s,c])=>grd.addColorStop(s,c));
     lbl.textContent='0 — 100% rain';
     extra.textContent=`Now: ${CURRENT.rain}%`;
   } else if (activeLayer==='temp') {
-    [[0,'#5090ff'],[.3,'#3cc864'],[.6,'#c8e020'],[.8,'#ffa000'],[1,'#dc1400']].forEach(([s,c])=>grd.addColorStop(s,c));
+    [[0,'#003cff'],[.25,'#00c8d2'],[.5,'#00dc50'],[.7,'#ffdc00'],[.85,'#ff5000'],[1,'#c80000']].forEach(([s,c])=>grd.addColorStop(s,c));
     lbl.textContent='18 — 38+ °C';
     extra.textContent=`Now: ${CURRENT.temp}°C`;
   } else {
-    [[0,'#a0c8f0'],[.5,'#c0c8d0'],[1,'#e8e8e8']].forEach(([s,c])=>grd.addColorStop(s,c));
+    [[0,'#0a0a28'],[.3,'#143ca0'],[.6,'#5090dc'],[.85,'#b4c8e6'],[1,'#ebf0ff']].forEach(([s,c])=>grd.addColorStop(s,c));
     lbl.textContent='0 — 100% cloud';
     extra.textContent=`Now: ${CURRENT.cloud}%`;
   }

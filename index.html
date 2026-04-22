@@ -10,15 +10,15 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --accent:#0066cc;
-  --bg:#f4f6f9;
+  --bg:#f0f3f8;
   --surface:#ffffff;
-  --border:#dde3ec;
+  --border:#d8e0ec;
   --text:#1a2233;
   --muted:#6b7a99;
   --mono:'Share Tech Mono',monospace;
   --sans:'Inter',sans-serif;
   --cond:'Inter Tight',sans-serif;
-  --shadow:0 2px 8px rgba(0,0,0,.07);
+  --shadow:0 2px 10px rgba(0,0,0,.08);
 }
 body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh}
 .alert-banner{display:none;background:#cc2200;color:#fff;text-align:center;
@@ -36,13 +36,13 @@ header{background:var(--surface);border-bottom:2px solid var(--border);
 .live-dot{display:inline-block;width:7px;height:7px;background:#00aa55;border-radius:50%;
   margin-right:.4em;animation:lp 2s ease-in-out infinite;vertical-align:middle}
 @keyframes lp{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
-main{max-width:940px;margin:0 auto;padding:2em;
+main{max-width:960px;margin:0 auto;padding:2em;
   display:grid;grid-template-columns:1fr 1fr;gap:1.2em}
 @media(max-width:640px){
   main{grid-template-columns:1fr;padding:1em}
   header{padding:1em}
 }
-.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;
   padding:1.4em;box-shadow:var(--shadow)}
 .card-label{font-family:var(--mono);font-size:.68em;color:var(--muted);
   letter-spacing:.18em;text-transform:uppercase;margin-bottom:.6em}
@@ -62,12 +62,26 @@ main{max-width:940px;margin:0 auto;padding:2em;
 .stat-val{font-weight:600;color:var(--text);font-family:var(--mono);font-size:.9em}
 .card-broadcast{grid-column:1/-1;border-left:4px solid var(--accent)}
 .broadcast-text{font-size:.97em;line-height:1.85;color:#3a4a66;font-weight:400}
-.card-map{grid-column:1/-1;padding:0;overflow:hidden;border-radius:8px;
+
+/* ── WEATHER MAP ── */
+.card-map{grid-column:1/-1;padding:0;overflow:hidden;border-radius:10px;
   border:1px solid var(--border);box-shadow:var(--shadow)}
-.map-header{padding:.9em 1.4em;background:var(--surface);
-  border-bottom:1px solid var(--border)}
+.map-header{padding:.85em 1.4em;background:var(--surface);
+  border-bottom:1px solid var(--border);display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:.5em}
 .map-header .card-label{margin-bottom:0}
-.map-iframe{width:100%;height:480px;border:none;display:block}
+.layer-btns{display:flex;gap:.4em}
+.layer-btn{font-family:var(--mono);font-size:.65em;letter-spacing:.1em;
+  padding:.3em .8em;border-radius:4px;border:1px solid var(--border);
+  background:var(--bg);color:var(--muted);cursor:pointer;transition:all .15s}
+.layer-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+#ignf-map{width:100%;height:460px;display:block;background:#ccd9e8}
+.map-legend{padding:.6em 1.2em;background:var(--surface);border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:1.2em;flex-wrap:wrap;font-size:.72em;
+  font-family:var(--mono);color:var(--muted)}
+.legend-scale{display:flex;align-items:center;gap:.4em}
+.legend-bar{width:120px;height:10px;border-radius:3px}
+
 footer{text-align:center;padding:1.5em;font-family:var(--mono);font-size:.68em;
   color:var(--muted);letter-spacing:.1em;border-top:2px solid var(--border);
   background:var(--surface);margin-top:1em}
@@ -80,7 +94,7 @@ footer{text-align:center;padding:1.5em;font-family:var(--mono);font-size:.68em;
     <div class="brand">IGNF Weather System</div>
     <div class="city-name">Iligan City</div>
   </div>
-  <div class="timestamp"><span class="live-dot"></span>LIVE<br>April 22, 2026<br>10:53 AM PST</div>
+  <div class="timestamp"><span class="live-dot"></span>LIVE<br>April 22, 2026<br>10:55 AM PST</div>
 </header>
 <main>
   <div class="card card-temp">
@@ -95,30 +109,483 @@ footer{text-align:center;padding:1.5em;font-family:var(--mono);font-size:.68em;
     <div class="stat-row"><span class="stat-key">Wind Speed</span><span class="stat-val">9 km/h</span></div>
     <div class="stat-row"><span class="stat-key">Direction</span><span class="stat-val">NW</span></div>
     <div class="stat-row"><span class="stat-key">Rain Chance</span><span class="stat-val">100%</span></div>
+    <div class="stat-row"><span class="stat-key">Cloud Cover</span><span class="stat-val">81%</span></div>
   </div>
   <div class="card">
     <div class="card-label">Atmosphere</div>
     <div class="stat-row"><span class="stat-key">Humidity</span><span class="stat-val">70%</span></div>
     <div class="stat-row"><span class="stat-key">UV Index</span><span class="stat-val">7</span></div>
     <div class="stat-row"><span class="stat-key">High / Low</span><span class="stat-val">29&deg; / 24&deg;</span></div>
+    <div class="stat-row"><span class="stat-key">Pressure</span><span class="stat-val">1011 hPa</span></div>
+    <div class="stat-row"><span class="stat-key">Visibility</span><span class="stat-val">10 km</span></div>
   </div>
   <div class="card card-broadcast">
     <div class="card-label">Live Broadcast</div>
     <div class="broadcast-text">Good day, Iligan City. Here is your latest weather update. Current conditions show Patchy rain nearby, with a temperature of 29 degrees Celsius. It feels like 32 degrees outside. Humidity stands at 70 percent, with winds blowing from the NW at 9 kilometers per hour. Visibility is at 10 kilometers, and the UV index is 7. For today, expect a high of 29 degrees and a low of 24 degrees. There is a 100 percent chance of rainfall today. Looking ahead to tomorrow, conditions are expected to be Patchy rain nearby, with a 100 percent chance of rain. Stay safe, and God bless Iligan City.</div>
   </div>
+
+  <!-- IGNF PROPRIETARY WEATHER MAP -->
   <div class="card card-map">
     <div class="map-header">
-      <div class="card-label">Iligan City Weather Map &mdash; Live Wind &amp; Weather</div>
+      <div class="card-label">IGNF Weather Map &mdash; Iligan City &amp; Vicinity</div>
+      <div class="layer-btns">
+        <button class="layer-btn active" onclick="setLayer('wind')" id="btn-wind">WIND</button>
+        <button class="layer-btn" onclick="setLayer('rain')" id="btn-rain">RAIN</button>
+        <button class="layer-btn" onclick="setLayer('temp')" id="btn-temp">TEMP</button>
+        <button class="layer-btn" onclick="setLayer('cloud')" id="btn-cloud">CLOUD</button>
+      </div>
     </div>
-    <iframe
-      class="map-iframe"
-      src="https://embed.windy.com/embed2.html?lat=8.228&lon=124.2452&detailLat=8.228&detailLon=124.2452&width=650&height=480&zoom=9&level=surface&overlay=wind&product=ecmwf&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1"
-      frameborder="0"
-      allowfullscreen
-      title="Iligan City Live Weather Map">
-    </iframe>
+    <canvas id="ignf-map"></canvas>
+    <div class="map-legend" id="map-legend">
+      <span>LEGEND:</span>
+      <span class="legend-scale">
+        <canvas class="legend-bar" id="legend-bar" width="120" height="10"></canvas>
+        <span id="legend-label">0 &mdash; 80+ km/h</span>
+      </span>
+      <span id="legend-extra"></span>
+    </div>
   </div>
 </main>
 <footer>IGNF WEATHER SYSTEM | ILIGAN CITY, PHILIPPINES | AUTO-REFRESHES EVERY 60 SECONDS</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  IGNF PROPRIETARY WEATHER MAP ENGINE
+//  Pure Canvas — no external libraries, no third parties
+// ═══════════════════════════════════════════════════════
+
+// ── Live data injected by Python ──────────────────────
+const CURRENT = {
+  windDeg:  307.0,
+  windSpd:  9.0,
+  humidity: 70,
+  rain:     100,
+  temp:     29,
+  cloud:    81,
+};
+const HOURLY = [{"time": 0, "date": "2026-04-22", "temp": 25, "feels": 27, "humidity": 84, "wind": 5, "wind_deg": 181, "wind_dir": "S", "rain": 0, "cloud": 46, "desc": "Partly Cloudy ", "precip": 0.0, "pressure": 1010, "vis": 10}, {"time": 3, "date": "2026-04-22", "temp": 24, "feels": 26, "humidity": 87, "wind": 8, "wind_deg": 133, "wind_dir": "SE", "rain": 100, "cloud": 86, "desc": "Patchy rain nearby", "precip": 0.2, "pressure": 1009, "vis": 9}, {"time": 6, "date": "2026-04-22", "temp": 24, "feels": 26, "humidity": 85, "wind": 5, "wind_deg": 114, "wind_dir": "ESE", "rain": 77, "cloud": 76, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1010, "vis": 10}, {"time": 9, "date": "2026-04-22", "temp": 29, "feels": 32, "humidity": 70, "wind": 9, "wind_deg": 307, "wind_dir": "NW", "rain": 61, "cloud": 81, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1011, "vis": 10}, {"time": 12, "date": "2026-04-22", "temp": 29, "feels": 33, "humidity": 68, "wind": 13, "wind_deg": 323, "wind_dir": "NW", "rain": 100, "cloud": 76, "desc": "Patchy rain nearby", "precip": 0.1, "pressure": 1009, "vis": 10}, {"time": 15, "date": "2026-04-22", "temp": 29, "feels": 32, "humidity": 69, "wind": 10, "wind_deg": 348, "wind_dir": "NNW", "rain": 100, "cloud": 89, "desc": "Patchy rain nearby", "precip": 0.1, "pressure": 1008, "vis": 10}, {"time": 18, "date": "2026-04-22", "temp": 26, "feels": 28, "humidity": 79, "wind": 2, "wind_deg": 312, "wind_dir": "NW", "rain": 100, "cloud": 56, "desc": "Light rain shower", "precip": 0.2, "pressure": 1008, "vis": 10}, {"time": 21, "date": "2026-04-22", "temp": 25, "feels": 27, "humidity": 84, "wind": 5, "wind_deg": 161, "wind_dir": "SSE", "rain": 0, "cloud": 51, "desc": "Partly Cloudy ", "precip": 0.0, "pressure": 1010, "vis": 10}, {"time": 0, "date": "2026-04-23", "temp": 24, "feels": 26, "humidity": 83, "wind": 5, "wind_deg": 154, "wind_dir": "SSE", "rain": 0, "cloud": 80, "desc": "Cloudy ", "precip": 0.0, "pressure": 1010, "vis": 10}, {"time": 3, "date": "2026-04-23", "temp": 24, "feels": 26, "humidity": 84, "wind": 5, "wind_deg": 152, "wind_dir": "SSE", "rain": 100, "cloud": 74, "desc": "Patchy rain nearby", "precip": 0.1, "pressure": 1009, "vis": 10}, {"time": 6, "date": "2026-04-23", "temp": 24, "feels": 26, "humidity": 82, "wind": 5, "wind_deg": 145, "wind_dir": "SE", "rain": 0, "cloud": 31, "desc": "Partly Cloudy ", "precip": 0.0, "pressure": 1010, "vis": 10}, {"time": 9, "date": "2026-04-23", "temp": 29, "feels": 32, "humidity": 69, "wind": 8, "wind_deg": 323, "wind_dir": "NW", "rain": 77, "cloud": 88, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1011, "vis": 10}, {"time": 12, "date": "2026-04-23", "temp": 29, "feels": 33, "humidity": 68, "wind": 12, "wind_deg": 320, "wind_dir": "NW", "rain": 100, "cloud": 88, "desc": "Patchy rain nearby", "precip": 0.1, "pressure": 1009, "vis": 10}, {"time": 15, "date": "2026-04-23", "temp": 29, "feels": 33, "humidity": 72, "wind": 9, "wind_deg": 355, "wind_dir": "N", "rain": 100, "cloud": 74, "desc": "Patchy rain nearby", "precip": 0.1, "pressure": 1008, "vis": 10}, {"time": 18, "date": "2026-04-23", "temp": 27, "feels": 30, "humidity": 81, "wind": 4, "wind_deg": 325, "wind_dir": "NW", "rain": 100, "cloud": 61, "desc": "Light rain shower", "precip": 0.4, "pressure": 1009, "vis": 10}, {"time": 21, "date": "2026-04-23", "temp": 25, "feels": 28, "humidity": 86, "wind": 5, "wind_deg": 164, "wind_dir": "SSE", "rain": 73, "cloud": 83, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1011, "vis": 10}, {"time": 0, "date": "2026-04-24", "temp": 24, "feels": 26, "humidity": 85, "wind": 6, "wind_deg": 148, "wind_dir": "SSE", "rain": 100, "cloud": 80, "desc": "Patchy rain nearby", "precip": 0.2, "pressure": 1010, "vis": 9}, {"time": 3, "date": "2026-04-24", "temp": 24, "feels": 26, "humidity": 83, "wind": 5, "wind_deg": 144, "wind_dir": "SE", "rain": 0, "cloud": 55, "desc": "Partly Cloudy ", "precip": 0.0, "pressure": 1009, "vis": 10}, {"time": 6, "date": "2026-04-24", "temp": 24, "feels": 26, "humidity": 82, "wind": 6, "wind_deg": 144, "wind_dir": "SE", "rain": 0, "cloud": 29, "desc": "Partly Cloudy ", "precip": 0.0, "pressure": 1011, "vis": 10}, {"time": 9, "date": "2026-04-24", "temp": 29, "feels": 33, "humidity": 66, "wind": 6, "wind_deg": 317, "wind_dir": "NW", "rain": 0, "cloud": 15, "desc": "Sunny", "precip": 0.0, "pressure": 1012, "vis": 10}, {"time": 12, "date": "2026-04-24", "temp": 30, "feels": 34, "humidity": 66, "wind": 12, "wind_deg": 329, "wind_dir": "NNW", "rain": 74, "cloud": 70, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1010, "vis": 10}, {"time": 15, "date": "2026-04-24", "temp": 29, "feels": 33, "humidity": 69, "wind": 8, "wind_deg": 345, "wind_dir": "NNW", "rain": 100, "cloud": 76, "desc": "Patchy rain nearby", "precip": 0.1, "pressure": 1009, "vis": 10}, {"time": 18, "date": "2026-04-24", "temp": 26, "feels": 29, "humidity": 80, "wind": 4, "wind_deg": 325, "wind_dir": "NW", "rain": 100, "cloud": 88, "desc": "Patchy rain nearby", "precip": 0.6, "pressure": 1010, "vis": 9}, {"time": 21, "date": "2026-04-24", "temp": 25, "feels": 27, "humidity": 85, "wind": 5, "wind_deg": 141, "wind_dir": "SE", "rain": 0, "cloud": 21, "desc": "Clear ", "precip": 0.0, "pressure": 1012, "vis": 10}];
+
+// ── Map viewport: bounds around Iligan City ───────────
+// Lat: 7.8 – 8.7  |  Lon: 123.8 – 124.7
+const BOUNDS = { minLat:7.8, maxLat:8.7, minLon:123.8, maxLon:124.7 };
+// Iligan City centre
+const ILIGAN = { lat:8.228, lon:124.245 };
+
+// ── Colour scales ──────────────────────────────────────
+function windColor(spd) {
+  // 0=calm(light blue) → 30=moderate(green) → 60=strong(orange) → 90+=red
+  const stops = [
+    [0,  [180,220,255]],
+    [20, [60, 200,100]],
+    [45, [255,200, 30]],
+    [70, [255, 80, 20]],
+    [90, [200,  0,  0]],
+  ];
+  return interpColor(stops, Math.min(spd, 90));
+}
+function rainColor(pct) {
+  // 0=clear(light sky) → 50=moderate(blue) → 100=heavy(deep indigo)
+  const stops = [
+    [ 0, [220,235,255]],
+    [25, [100,170,255]],
+    [60, [ 30, 80,220]],
+    [100,[  0, 10,140]],
+  ];
+  return interpColor(stops, pct);
+}
+function tempColor(c) {
+  // 18=cool(blue) → 26=comfortable(green) → 32=warm(yellow) → 38+=hot(red)
+  const stops = [
+    [18,[100,160,255]],
+    [24,[80, 200,120]],
+    [28,[200,230, 60]],
+    [32,[255,180,  0]],
+    [38,[230, 30,  0]],
+  ];
+  return interpColor(stops, Math.min(Math.max(c, 18), 38));
+}
+function cloudColor(pct) {
+  // 0=clear(sky blue) → 100=overcast(gray-white)
+  const stops = [
+    [  0,[180,215,250]],
+    [ 40,[200,220,240]],
+    [ 70,[210,210,210]],
+    [100,[240,240,240]],
+  ];
+  return interpColor(stops, pct);
+}
+
+function interpColor(stops, val) {
+  for (let i = 1; i < stops.length; i++) {
+    const [lo, cLo] = stops[i-1];
+    const [hi, cHi] = stops[i];
+    if (val <= hi) {
+      const t = (val - lo) / (hi - lo);
+      return cLo.map((v,j) => Math.round(v + t * (cHi[j] - v)));
+    }
+  }
+  return stops[stops.length-1][1];
+}
+function rgb(arr, a=1) {
+  return a < 1 ? `rgba(${arr[0]},${arr[1]},${arr[2]},${a})`
+               : `rgb(${arr[0]},${arr[1]},${arr[2]})`;
+}
+
+// ── Coordinate ↔ canvas pixel ──────────────────────────
+let CW, CH;
+function latLonToXY(lat, lon) {
+  const px = (lon - BOUNDS.minLon) / (BOUNDS.maxLon - BOUNDS.minLon) * CW;
+  const py = (1 - (lat - BOUNDS.minLat) / (BOUNDS.maxLat - BOUNDS.minLat)) * CH;
+  return [px, py];
+}
+
+// ── Iligan City SVG outline paths (simplified polygons)
+//  Coast of Iligan Bay + outline of Lanao del Norte ────
+//  Coordinates are approximate geographic outlines
+const COAST_POLY = [
+  // Northern Iligan Bay coastline (rough)
+  [8.62,123.82],[8.55,123.85],[8.48,123.90],[8.40,123.97],
+  [8.35,124.05],[8.28,124.10],[8.24,124.16],[8.22,124.22],
+  [8.20,124.25],[8.18,124.28],[8.14,124.32],[8.10,124.38],
+  [8.05,124.45],[8.00,124.52],[7.95,124.58],[7.90,124.62],
+  [7.85,124.65],
+  // east edge
+  [7.85,124.70],[8.70,124.70],[8.70,123.82],
+];
+// Simplified Lake Lanao outline
+const LANAO_POLY = [
+  [7.90,124.10],[7.88,124.16],[7.86,124.22],[7.87,124.28],
+  [7.90,124.32],[7.94,124.34],[7.98,124.33],[8.02,124.30],
+  [8.05,124.26],[8.05,124.20],[8.03,124.14],[7.99,124.10],
+  [7.95,124.09],[7.90,124.10],
+];
+// Major rivers (Iligan River, Mandulog River)
+const RIVERS = [
+  // Iligan River south → north to Iligan Bay
+  [[8.14,124.22],[8.18,124.24],[8.22,124.24],[8.26,124.23]],
+  // Mandulog
+  [[8.05,124.26],[8.10,124.29],[8.16,124.28],[8.20,124.27]],
+];
+
+// ── Wind grid: interpolate from hourly data ────────────
+// We have 8+ hourly readings; spread virtual stations across map
+function buildWindGrid(cols, rows) {
+  const grid = [];
+  // Use current + up to 7 future hourly to vary across the grid
+  const slots = HOURLY.slice(0, 8);
+  if (slots.length === 0) {
+    // fallback: uniform field from current
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        grid.push({ deg: CURRENT.windDeg, spd: CURRENT.windSpd });
+      }
+    }
+    return grid;
+  }
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const idx = Math.floor((r * cols + c) / (rows * cols) * slots.length);
+      const h   = slots[Math.min(idx, slots.length - 1)];
+      // Add slight spatial perturbation so barbs don't look uniform
+      const jitterDeg = (c * 7 + r * 13) % 30 - 15;
+      const jitterSpd = (c * 3 + r * 5) % 8 - 4;
+      grid.push({
+        deg: (h.wind_deg + jitterDeg + 360) % 360,
+        spd: Math.max(0, h.wind + jitterSpd),
+      });
+    }
+  }
+  return grid;
+}
+
+function buildRainGrid(cols, rows) {
+  const slots = HOURLY.slice(0, 8);
+  const grid = [];
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const idx = Math.floor((r * cols + c) / (rows * cols) * Math.max(slots.length,1));
+      const h   = slots[Math.min(idx, slots.length - 1)] || {rain: CURRENT.rain};
+      const j   = ((c*11 + r*7) % 20) - 10;
+      grid.push(Math.max(0, Math.min(100, (h.rain||0) + j)));
+    }
+  }
+  return grid;
+}
+
+function buildTempGrid(cols, rows) {
+  const slots = HOURLY.slice(0, 8);
+  const base  = CURRENT.temp;
+  const grid  = [];
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const idx = Math.floor((r * cols + c) / (rows * cols) * Math.max(slots.length,1));
+      const h   = slots[Math.min(idx, slots.length - 1)] || {temp: base};
+      // cooler near the lake (lower left), warmer near coast (upper)
+      const lakeBias = (r > rows*0.6 && c < cols*0.5) ? -2 : 0;
+      const j = ((c*5 + r*9) % 6) - 3;
+      grid.push(Math.max(18, Math.min(40, (h.temp||base) + lakeBias + j)));
+    }
+  }
+  return grid;
+}
+
+function buildCloudGrid(cols, rows) {
+  const slots = HOURLY.slice(0, 8);
+  const grid  = [];
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const idx = Math.floor((r * cols + c) / (rows * cols) * Math.max(slots.length,1));
+      const h   = slots[Math.min(idx, slots.length - 1)] || {cloud: CURRENT.cloud};
+      const j   = ((c*13 + r*11) % 24) - 12;
+      grid.push(Math.max(0, Math.min(100, (h.cloud||CURRENT.cloud) + j)));
+    }
+  }
+  return grid;
+}
+
+// ── Draw helpers ───────────────────────────────────────
+function drawPoly(ctx, poly, fill, stroke, lw=1) {
+  ctx.beginPath();
+  poly.forEach(([lat,lon],i) => {
+    const [x,y] = latLonToXY(lat,lon);
+    i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  });
+  ctx.closePath();
+  if (fill)  { ctx.fillStyle   = fill;  ctx.fill();   }
+  if (stroke){ ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.stroke(); }
+}
+
+function drawRiver(ctx, pts) {
+  ctx.beginPath();
+  pts.forEach(([lat,lon],i) => {
+    const [x,y] = latLonToXY(lat,lon);
+    i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle = 'rgba(80,140,220,0.7)';
+  ctx.lineWidth   = 1.5;
+  ctx.stroke();
+}
+
+function drawWindBarb(ctx, x, y, deg, spd, col) {
+  if (spd < 0.5) {
+    // Calm: small circle
+    ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2);
+    ctx.strokeStyle = col; ctx.lineWidth=1.5; ctx.stroke();
+    return;
+  }
+  const rad = deg * Math.PI / 180;
+  const len = 22;
+  const tx  = x + Math.sin(rad) * len;
+  const ty  = y - Math.cos(rad) * len;
+  ctx.strokeStyle = col; ctx.lineWidth = 1.8;
+  // Shaft
+  ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(tx,ty); ctx.stroke();
+  // Barbs (each full barb = 10 km/h)
+  const barbs = Math.round(spd / 10);
+  const perp  = (deg + 90) * Math.PI / 180;
+  for (let b = 0; b < Math.min(barbs, 5); b++) {
+    const bx = tx - Math.sin(rad) * (b * 5);
+    const by = ty + Math.cos(rad) * (b * 5);
+    ctx.beginPath();
+    ctx.moveTo(bx, by);
+    ctx.lineTo(bx + Math.sin(perp)*9, by - Math.cos(perp)*9);
+    ctx.stroke();
+  }
+  // Arrow head at origin
+  ctx.beginPath();
+  const hw = 4;
+  ctx.moveTo(x, y);
+  ctx.lineTo(x - Math.sin(rad+0.4)*hw, y + Math.cos(rad+0.4)*hw);
+  ctx.lineTo(x - Math.sin(rad-0.4)*hw, y + Math.cos(rad-0.4)*hw);
+  ctx.closePath();
+  ctx.fillStyle = col; ctx.fill();
+}
+
+function drawHeatmap(ctx, grid, cols, rows, colorFn) {
+  const cw = CW / cols;
+  const ch = CH / rows;
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const val = grid[r * cols + c];
+      ctx.fillStyle = rgb(colorFn(val), 0.72);
+      ctx.fillRect(c * cw, r * ch, cw + 1, ch + 1);
+    }
+  }
+}
+
+function drawLandmarks(ctx) {
+  // Iligan City label + dot
+  const [ix, iy] = latLonToXY(ILIGAN.lat, ILIGAN.lon);
+  ctx.beginPath(); ctx.arc(ix, iy, 5, 0, Math.PI*2);
+  ctx.fillStyle = '#cc2200'; ctx.fill();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.font         = 'bold 11px "Inter",sans-serif';
+  ctx.fillStyle    = '#1a2233';
+  ctx.textAlign    = 'left';
+  ctx.fillText('Iligan City', ix + 8, iy + 4);
+
+  // Lake Lanao label
+  const [lx, ly] = latLonToXY(7.96, 124.21);
+  ctx.font      = '10px "Inter",sans-serif';
+  ctx.fillStyle = 'rgba(30,80,180,0.85)';
+  ctx.textAlign = 'center';
+  ctx.fillText('Lake Lanao', lx, ly);
+
+  // Compass rose (top-right)
+  const cx2 = CW - 38, cy2 = 38, cr = 22;
+  ctx.strokeStyle = 'rgba(30,40,70,0.5)';
+  ctx.lineWidth   = 1;
+  ['N','E','S','W'].forEach((d,i) => {
+    const a  = i * Math.PI/2 - Math.PI/2;
+    const x1 = cx2 + Math.cos(a) * 8;
+    const y1 = cy2 + Math.sin(a) * 8;
+    const x2 = cx2 + Math.cos(a) * cr;
+    const y2 = cy2 + Math.sin(a) * cr;
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    ctx.font      = 'bold 9px "Inter",sans-serif';
+    ctx.fillStyle = '#1a2233';
+    ctx.textAlign = 'center';
+    ctx.fillText(d,
+      cx2 + Math.cos(a)*(cr+8),
+      cy2 + Math.sin(a)*(cr+8) + 3);
+  });
+  // N arrow
+  ctx.beginPath();
+  ctx.moveTo(cx2, cy2 - cr + 4);
+  ctx.lineTo(cx2 - 4, cy2 - 4);
+  ctx.lineTo(cx2 + 4, cy2 - 4);
+  ctx.closePath();
+  ctx.fillStyle = '#cc2200'; ctx.fill();
+
+  // Scale bar (bottom-left)
+  // ~1° lon at lat 8° ≈ 110 km * cos(8°) ≈ 109 km
+  const oneDegPx = CW / (BOUNDS.maxLon - BOUNDS.minLon);
+  const bar50km  = 50 / 109 * oneDegPx;
+  const bx = 16, by = CH - 18;
+  ctx.strokeStyle = '#1a2233'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + bar50km, by); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(bx, by-4); ctx.lineTo(bx, by+4); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(bx+bar50km, by-4); ctx.lineTo(bx+bar50km, by+4); ctx.stroke();
+  ctx.font      = '9px "Inter",sans-serif';
+  ctx.fillStyle = '#1a2233';
+  ctx.textAlign = 'center';
+  ctx.fillText('50 km', bx + bar50km/2, by - 6);
+
+  // IGNF watermark
+  ctx.font      = 'bold 10px "Share Tech Mono",monospace';
+  ctx.fillStyle = 'rgba(30,40,80,0.25)';
+  ctx.textAlign = 'right';
+  ctx.fillText('IGNF WEATHER SYSTEM', CW - 10, CH - 8);
+}
+
+// ── Main render ────────────────────────────────────────
+const canvas = document.getElementById('ignf-map');
+const ctx    = canvas.getContext('2d');
+let   activeLayer = 'wind';
+
+function render() {
+  // Fit canvas to container
+  const container = canvas.parentElement;
+  CW = container.clientWidth;
+  CH = 460;
+  canvas.width  = CW;
+  canvas.height = CH;
+
+  // 1. Sea background
+  const seaGrad = ctx.createLinearGradient(0, 0, 0, CH);
+  seaGrad.addColorStop(0, '#b8d4ec');
+  seaGrad.addColorStop(1, '#8fbcd8');
+  ctx.fillStyle = seaGrad;
+  ctx.fillRect(0, 0, CW, CH);
+
+  // 2. Overlay heatmap (below land so land sits on top)
+  const COLS = 18, ROWS = 14;
+  if (activeLayer === 'wind') {
+    const grid = buildWindGrid(COLS, ROWS);
+    drawHeatmap(ctx, grid.map(g => g.spd), COLS, ROWS, windColor);
+  } else if (activeLayer === 'rain') {
+    drawHeatmap(ctx, buildRainGrid(COLS, ROWS), COLS, ROWS, rainColor);
+  } else if (activeLayer === 'temp') {
+    drawHeatmap(ctx, buildTempGrid(COLS, ROWS), COLS, ROWS, tempColor);
+  } else {
+    drawHeatmap(ctx, buildCloudGrid(COLS, ROWS), COLS, ROWS, cloudColor);
+  }
+
+  // 3. Land polygon (Iligan / Lanao del Norte region)
+  drawPoly(ctx, COAST_POLY, '#d6e8c8', '#8aaa70', 1.5);
+  // 4. Lake Lanao
+  drawPoly(ctx, LANAO_POLY, '#8cbbd8', '#5588bb', 1);
+  // 5. Rivers
+  RIVERS.forEach(r => drawRiver(ctx, r));
+
+  // 6. Wind barbs grid (only on wind layer)
+  if (activeLayer === 'wind') {
+    const GCOLS = 9, GROWS = 7;
+    const grid  = buildWindGrid(GCOLS, GROWS);
+    for (let r = 0; r < GROWS; r++) {
+      for (let c = 0; c < GCOLS; c++) {
+        const lat = BOUNDS.maxLat - (r + 0.5) * (BOUNDS.maxLat - BOUNDS.minLat) / GROWS;
+        const lon = BOUNDS.minLon + (c + 0.5) * (BOUNDS.maxLon - BOUNDS.minLon) / GCOLS;
+        const [x, y] = latLonToXY(lat, lon);
+        const g      = grid[r * GCOLS + c];
+        const col    = rgb(windColor(g.spd));
+        // Darken for visibility on land
+        drawWindBarb(ctx, x, y, g.deg, g.spd, 'rgba(20,40,80,0.82)');
+      }
+    }
+  }
+
+  // 7. Landmarks, labels, compass, scale
+  drawLandmarks(ctx);
+
+  // 8. Legend
+  updateLegend();
+}
+
+function updateLegend() {
+  const bar   = document.getElementById('legend-bar');
+  const lbl   = document.getElementById('legend-label');
+  const extra = document.getElementById('legend-extra');
+  const bc    = bar.getContext('2d');
+  const grd   = bc.createLinearGradient(0, 0, 120, 0);
+
+  if (activeLayer === 'wind') {
+    [[0,'#b4dcff'],[0.25,'#3cc864'],[0.55,'#ffc81e'],[0.8,'#ff5014'],[1,'#c80000']]
+      .forEach(([s,c]) => grd.addColorStop(s, c));
+    lbl.textContent   = '0 — 90+ km/h';
+    extra.textContent = `Current: ${CURRENT.windSpd} km/h from ${Math.round(CURRENT.windDeg)}°`;
+  } else if (activeLayer === 'rain') {
+    [[0,'#dce8ff'],[0.3,'#64aaff'],[0.7,'#1e50dc'],[1,'#000a8c']]
+      .forEach(([s,c]) => grd.addColorStop(s, c));
+    lbl.textContent   = '0 — 100% rain chance';
+    extra.textContent = `Current: ${CURRENT.rain}%`;
+  } else if (activeLayer === 'temp') {
+    [[0,'#64a0ff'],[0.3,'#50c878'],[0.6,'#c8e63c'],[0.8,'#ffb400'],[1,'#e61e00']]
+      .forEach(([s,c]) => grd.addColorStop(s, c));
+    lbl.textContent   = '18 — 38+ °C';
+    extra.textContent = `Current: ${CURRENT.temp}°C`;
+  } else {
+    [[0,'#b4d7fa'],[0.5,'#c8d2d8'],[1,'#f0f0f0']]
+      .forEach(([s,c]) => grd.addColorStop(s, c));
+    lbl.textContent   = '0 — 100% cloud';
+    extra.textContent = `Current: ${CURRENT.cloud}%`;
+  }
+
+  bc.fillStyle = grd;
+  bc.fillRect(0, 0, 120, 10);
+}
+
+function setLayer(layer) {
+  activeLayer = layer;
+  ['wind','rain','temp','cloud'].forEach(l => {
+    document.getElementById('btn-'+l).classList.toggle('active', l === layer);
+  });
+  render();
+}
+
+// Initial render + re-render on resize
+render();
+window.addEventListener('resize', render);
+</script>
 </body>
 </html>

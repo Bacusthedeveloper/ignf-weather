@@ -96,7 +96,7 @@ footer{text-align:center;padding:1.5em;font-family:var(--mono);font-size:.68em;
     <div class="brand">IGNF Weather System</div>
     <div class="city-name">Iligan City</div>
   </div>
-  <div class="timestamp"><span class="live-dot"></span>LIVE<br>April 26, 2026<br>03:34 PM PST</div>
+  <div class="timestamp"><span class="live-dot"></span>LIVE<br>April 26, 2026<br>03:36 PM PST</div>
 </header>
 <main>
   <div class="card card-temp">
@@ -237,38 +237,127 @@ function geo2px(lat, lon) {
   return [pt.x, pt.y];
 }
 
-// ── Pipe streamline: a row of | symbols curved along wind flow ─
-// Each | is a short stroke rotated to the wind heading.
-// They fan out from the origin point tracing the flow path.
-function drawPipeStreamline(x, y, deg, spd) {
-  if (spd < 0.5) return;
-  // Convert meteorological degrees (clockwise from N) to canvas radians
-  const rad  = (deg - 90) * Math.PI / 180;
-  const plen = 9 + Math.min(spd * 0.2, 8);   // | height scales with speed
-  const gap  = plen * 2.2;                    // spacing between pipes
-  const n    = 5;                             // number of | per streamline
+// ═══════════════════════════════════════════════════════════════════
+//  NOAA WIND BARB — authentic WMO/NOAA station model symbol
+//
+//  spd_kmh: wind speed in km/h  |  deg: meteorological direction
+//  (from which wind blows, clockwise from North)
+//
+//  Barb anatomy (WMO convention):
+//    • Staff points INTO the wind (upwind direction)
+//    • 50-kt flag  = filled triangle on staff
+//    • 10-kt barb  = full angled tick (~45° off staff, length = halfStaff)
+//    • 5-kt barb   = half-length tick
+//    • Circle      = calm (< 2 kt)
+//    • Speed buckets (in knots, 1 km/h ≈ 0.5399 kt):
+//        calm  <  2 kt  → open circle
+//        2–7   kt       → staff only (no barbs)
+//        8–12  kt       → 1 half-barb
+//        13–17 kt       → 1 full barb
+//        18–22 kt       → 1 full + 1 half
+//        23–27 kt       → 2 full
+//        ... +5kt = +1 barb;  50kt flag
+// ═══════════════════════════════════════════════════════════════════
+function drawWindBarb(cx, cy, deg_met, spd_kmh) {
+  const kt = spd_kmh * 0.539957;
 
-  for (let i = 0; i < n; i++) {
-    // Slight sine-curve offset gives curved flow feel
-    const curve = Math.sin(i / n * Math.PI) * 4;
-    const perp  = rad + Math.PI / 2;
-    const cx = x + Math.cos(rad) * gap * i + Math.cos(perp) * curve;
-    const cy = y + Math.sin(rad) * gap * i + Math.sin(perp) * curve;
-
+  // Calm: draw open circle
+  if (kt < 2) {
     octx.save();
-    octx.translate(cx, cy);
-    octx.rotate(rad + Math.PI / 2);
     octx.beginPath();
-    octx.moveTo(0, -plen / 2);
-    octx.lineTo(0,  plen / 2);
-    octx.strokeStyle = `rgba(255,255,255,${(0.9 - i * 0.14).toFixed(2)})`;
-    octx.lineWidth   = 1.8;
-    octx.lineCap     = 'round';
+    octx.arc(cx, cy, 5, 0, 2 * Math.PI);
+    octx.strokeStyle = 'rgba(255,255,255,0.92)';
+    octx.lineWidth   = 1.5;
     octx.stroke();
     octx.restore();
+    return;
   }
+
+  // Canvas angle: meteorological deg (from North CW) → canvas radians
+  // Staff points upwind (INTO the wind), so canvas angle = deg - 90°
+  const angle = (deg_met - 90) * Math.PI / 180;
+
+  const staffLen  = 28;   // px length of staff
+  const barbLen   = 12;   // px length of a full barb
+  const barbAngle = 60 * Math.PI / 180;  // barb angle off staff (WMO: 60°)
+  const spacing   = 5;    // px between barbs along staff
+
+  // Decompose into flags (50kt), full barbs (10kt), half barbs (5kt)
+  let rem   = Math.round(kt / 5) * 5;   // round to nearest 5 kt
+  let flags = Math.floor(rem / 50);  rem -= flags * 50;
+  let fulls = Math.floor(rem / 10);  rem -= fulls * 10;
+  let halfs = Math.floor(rem / 5);
+
+  octx.save();
+  octx.translate(cx, cy);
+  octx.rotate(angle);
+  octx.strokeStyle = 'rgba(255,255,255,0.95)';
+  octx.fillStyle   = 'rgba(255,255,255,0.95)';
+  octx.lineWidth   = 1.6;
+  octx.lineCap     = 'round';
+  octx.lineJoin    = 'round';
+
+  // Draw station dot
+  octx.beginPath();
+  octx.arc(0, 0, 2.2, 0, 2 * Math.PI);
+  octx.fill();
+
+  // Draw staff (pointing upwind = positive X direction after rotation)
+  octx.beginPath();
+  octx.moveTo(0, 0);
+  octx.lineTo(staffLen, 0);
+  octx.stroke();
+
+  // Place barbs from tip of staff backward, flags first
+  let pos = staffLen;
+
+  // 50-kt flags (filled triangles)
+  for (let i = 0; i < flags; i++) {
+    const tip  = pos;
+    const base = pos - spacing * 1.8;
+    octx.beginPath();
+    octx.moveTo(tip,  0);
+    octx.lineTo(base, 0);
+    octx.lineTo(base - 2, -barbLen * 1.1);
+    octx.closePath();
+    octx.fill();
+    pos -= spacing * 1.8 + 2;
+  }
+
+  // 10-kt full barbs
+  for (let i = 0; i < fulls; i++) {
+    octx.beginPath();
+    octx.moveTo(pos, 0);
+    octx.lineTo(pos - barbLen * Math.cos(barbAngle), -barbLen * Math.sin(barbAngle));
+    octx.stroke();
+    pos -= spacing;
+  }
+
+  // 5-kt half barbs
+  for (let i = 0; i < halfs; i++) {
+    const hlen = barbLen * 0.5;
+    octx.beginPath();
+    octx.moveTo(pos, 0);
+    octx.lineTo(pos - hlen * Math.cos(barbAngle), -hlen * Math.sin(barbAngle));
+    octx.stroke();
+    pos -= spacing;
+  }
+
+  octx.restore();
 }
 
+// ═══════════════════════════════════════════════════════════════════
+//  DOW / NOAA-STYLE CIRCULAR RADAR SWEEP
+//
+//  Renders a proper radar PPI (Plan Position Indicator) display:
+//    • Circular sweep centred on Iligan City, geo-locked to map
+//    • Polar coordinate fill: each "range ring × azimuth wedge" cell
+//      is a small arc segment filled with the layer colour — like a
+//      real WSR-88D or DOW radar product
+//    • Outside the radar circle: subtle dark vignette mask
+//    • Range rings + azimuth spokes drawn at 0.25× opacity (like NOAA)
+//    • Sweep radius = ~25 km (DOW mobile radar effective range)
+// ═══════════════════════════════════════════════════════════════════
 function drawIGNFOverlay() {
   const wrap = document.getElementById('ignf-map-wrap');
   const W = wrap.clientWidth, H = wrap.clientHeight;
@@ -276,14 +365,25 @@ function drawIGNFOverlay() {
   overlayCanvas.height = H;
   octx.clearRect(0, 0, W, H);
 
-  // Iligan City bounding box (official LGU extent)
+  // ── Radar centre = Iligan City, converted to canvas pixels ──
+  const [cx, cy] = geo2px(8.228, 124.245);
+
+  // ── Sweep radius: 25 km in pixel space ──────────────────────
+  // Compute by projecting a point 25 km north of centre
+  // 0.225° latitude ≈ 25 km at this location
+  const [, ry25] = geo2px(8.228 + 0.225, 124.245);
+  const sweepR = Math.abs(cy - ry25);   // pixels for 25 km radius
+
+  // ── Radar parameters ─────────────────────────────────────────
+  const N_RINGS = 10;    // concentric range rings
+  const N_AZ    = 72;    // azimuth divisions (5° each = 360°)
+  const TAU     = 2 * Math.PI;
+  const dAz     = TAU / N_AZ;
+
+  // ── Pick layer ────────────────────────────────────────────────
   const ILI_N = 8.310, ILI_S = 7.998;
   const ILI_W = 124.182, ILI_E = 124.415;
-
-  // NOAA WSR-88D style: coarse pixel grid — blocky colored squares
-  const COLS = 28, ROWS = 36;
-  const dlat = (ILI_N - ILI_S) / ROWS;
-  const dlon = (ILI_E - ILI_W) / COLS;
+  const COLS = N_AZ, ROWS = N_RINGS;
 
   let grid, colorFn;
   if      (activeLayer==='wind')  { grid=windGrid(COLS,ROWS);  colorFn=(g)=>windColor(typeof g==='object'?g.spd:g); }
@@ -291,35 +391,94 @@ function drawIGNFOverlay() {
   else if (activeLayer==='temp')  { grid=tempGrid(COLS,ROWS);  colorFn=tempColor; }
   else                            { grid=cloudGrid(COLS,ROWS); colorFn=cloudColor; }
 
-  // Draw each cell as a hard-edged geographic rectangle (no blending)
-  // This gives the authentic NOAA blocky radar pixel look.
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      const lat0 = ILI_N - r * dlat;
-      const lat1 = ILI_N - (r + 1) * dlat;
-      const lon0 = ILI_W + c * dlon;
-      const lon1 = ILI_W + (c + 1) * dlon;
+  // ── 1. Draw filled radar wedge cells ─────────────────────────
+  //    Each cell = arc segment from r0→r1 between az0→az1
+  //    Canvas 0° = 3 o'clock; meteorological 0° = North (12 o'clock)
+  //    So offset = -π/2
+  octx.save();
+  for (let az = 0; az < N_AZ; az++) {
+    for (let ring = 0; ring < N_RINGS; ring++) {
+      const r0 = (ring / N_RINGS) * sweepR;
+      const r1 = ((ring + 1) / N_RINGS) * sweepR;
+      const a0 = az * dAz - Math.PI / 2;
+      const a1 = a0 + dAz + 0.01;  // tiny overlap prevents gaps
 
-      const [x0, y0] = geo2px(lat0, lon0);   // top-left corner
-      const [x1, y1] = geo2px(lat1, lon1);   // bottom-right corner
-
-      const px = Math.min(x0, x1);
-      const py = Math.min(y0, y1);
-      const pw = Math.abs(x1 - x0);
-      const ph = Math.abs(y1 - y0);
-
-      if (px+pw < 0 || px > W || py+ph < 0 || py > H) continue;
-
-      const val = grid[r * COLS + c];
+      const val = grid[ring * COLS + az];
       const col = colorFn(val);
-      octx.fillStyle = rgba(col, 0.75);
-      octx.fillRect(Math.round(px), Math.round(py), Math.round(pw)+1, Math.round(ph)+1);
+
+      // Alpha: stronger at edge for depth effect (like real radar gradient)
+      const alpha = 0.55 + (ring / N_RINGS) * 0.25;
+
+      octx.beginPath();
+      octx.moveTo(cx + r0 * Math.cos(a0), cy + r0 * Math.sin(a0));
+      octx.arc(cx, cy, r1, a0, a1);
+      octx.arc(cx, cy, r0, a1, a0, true);
+      octx.closePath();
+      octx.fillStyle = rgba(col, alpha);
+      octx.fill();
     }
   }
+  octx.restore();
 
-  // Pipe streamlines on wind layer — | symbols following flow direction
+  // ── 2. Range rings (like NOAA: subtle dotted circles) ────────
+  octx.save();
+  octx.strokeStyle = 'rgba(255,255,255,0.18)';
+  octx.lineWidth   = 0.8;
+  octx.setLineDash([3, 5]);
+  for (let ring = 1; ring <= N_RINGS; ring++) {
+    const r = (ring / N_RINGS) * sweepR;
+    octx.beginPath();
+    octx.arc(cx, cy, r, 0, TAU);
+    octx.stroke();
+  }
+  octx.setLineDash([]);
+  octx.restore();
+
+  // ── 3. Azimuth spokes every 30° ──────────────────────────────
+  octx.save();
+  octx.strokeStyle = 'rgba(255,255,255,0.12)';
+  octx.lineWidth   = 0.7;
+  for (let i = 0; i < 12; i++) {
+    const a = i * (TAU / 12) - Math.PI / 2;
+    octx.beginPath();
+    octx.moveTo(cx, cy);
+    octx.lineTo(cx + sweepR * Math.cos(a), cy + sweepR * Math.sin(a));
+    octx.stroke();
+  }
+  octx.restore();
+
+  // ── 4. Outer radar circle border ─────────────────────────────
+  octx.save();
+  octx.beginPath();
+  octx.arc(cx, cy, sweepR, 0, TAU);
+  octx.strokeStyle = 'rgba(255,255,255,0.45)';
+  octx.lineWidth   = 1.5;
+  octx.stroke();
+
+  // ── 5. Vignette mask — darken everything OUTSIDE radar circle ─
+  //    Simulates DOW / NEXRAD "no data" region beyond range
+  octx.save();
+  const vgrd = octx.createRadialGradient(cx, cy, sweepR * 0.85, cx, cy, sweepR * 1.25);
+  vgrd.addColorStop(0, 'rgba(0,0,0,0)');
+  vgrd.addColorStop(1, 'rgba(0,0,0,0.72)');
+  // Fill full canvas then punch out the radar circle
+  octx.fillStyle = 'rgba(0,0,0,0.62)';
+  octx.fillRect(0, 0, W, H);
+  // Clear (unmask) the radar disk
+  octx.globalCompositeOperation = 'destination-out';
+  octx.beginPath();
+  octx.arc(cx, cy, sweepR, 0, TAU);
+  octx.fill();
+  octx.globalCompositeOperation = 'source-over';
+  // Soft edge gradient over border
+  octx.fillStyle = vgrd;
+  octx.fillRect(0, 0, W, H);
+  octx.restore();
+
+  // ── 6. NOAA wind barbs grid (Wind layer only) ─────────────────
+  //    A 7×9 grid of barbs geo-locked inside the radar sweep area
   if (activeLayer === 'wind') {
-    const GC = 10, GR = 13;
+    const GC = 7, GR = 9;
     const bg    = windGrid(GC, GR);
     const gdlat = (ILI_N - ILI_S) / GR;
     const gdlon = (ILI_E - ILI_W) / GC;
@@ -327,20 +486,48 @@ function drawIGNFOverlay() {
       for (let c = 0; c < GC; c++) {
         const lat = ILI_N - (r + 0.5) * gdlat;
         const lon = ILI_W + (c + 0.5) * gdlon;
-        const [x, y] = geo2px(lat, lon);
-        if (x < -60 || x > W+60 || y < -60 || y > H+60) continue;
+        const [bx, by] = geo2px(lat, lon);
+        // Only draw barbs inside the radar circle
+        const dx = bx - cx, dy = by - cy;
+        if (dx * dx + dy * dy > sweepR * sweepR) continue;
+        if (bx < 0 || bx > W || by < 0 || by > H) continue;
         const g = bg[r * GC + c];
-        drawPipeStreamline(x, y, g.deg, g.spd);
+        drawWindBarb(bx, by, g.deg, g.spd);
       }
     }
   }
 
-  // Watermark
-  octx.font      = 'bold 10px "Share Tech Mono",monospace';
-  octx.fillStyle = 'rgba(255,255,255,0.28)';
-  octx.textAlign = 'right';
-  octx.fillText('IGNF WEATHER SYSTEM', W-10, H-8);
+  // ── 7. Centre crosshair + radar site label ────────────────────
+  octx.save();
+  octx.strokeStyle = 'rgba(255,255,255,0.6)';
+  octx.lineWidth   = 1.2;
+  octx.beginPath(); octx.moveTo(cx - 8, cy); octx.lineTo(cx + 8, cy); octx.stroke();
+  octx.beginPath(); octx.moveTo(cx, cy - 8); octx.lineTo(cx, cy + 8); octx.stroke();
+  octx.font        = 'bold 9px "Share Tech Mono",monospace';
+  octx.fillStyle   = 'rgba(255,255,255,0.75)';
+  octx.textAlign   = 'center';
+  octx.fillText('IGNF-DOW', cx, cy - 12);
+  octx.restore();
 
+  // ── 8. Range ring labels (5 km intervals) ────────────────────
+  octx.save();
+  octx.font      = '8px "Share Tech Mono",monospace';
+  octx.fillStyle = 'rgba(255,255,255,0.45)';
+  octx.textAlign = 'center';
+  for (let ring = 2; ring <= N_RINGS; ring += 2) {
+    const r   = (ring / N_RINGS) * sweepR;
+    const km  = Math.round((ring / N_RINGS) * 25);
+    octx.fillText(`${km}km`, cx + r * Math.cos(-Math.PI / 4), cy + r * Math.sin(-Math.PI / 4) - 2);
+  }
+  octx.restore();
+
+  // ── 9. Watermark ─────────────────────────────────────────────
+  octx.font      = 'bold 10px "Share Tech Mono",monospace';
+  octx.fillStyle = 'rgba(255,255,255,0.22)';
+  octx.textAlign = 'right';
+  octx.fillText('IGNF WEATHER SYSTEM', W - 10, H - 8);
+
+  octx.restore();   // close outer save from range-ring block
   updateLegend();
 }
 

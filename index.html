@@ -96,34 +96,34 @@ footer{text-align:center;padding:1.5em;font-family:var(--mono);font-size:.68em;
     <div class="brand">IGNF Weather System</div>
     <div class="city-name">Iligan City</div>
   </div>
-  <div class="timestamp"><span class="live-dot"></span>LIVE<br>May 09, 2026<br>04:59 PM PST</div>
+  <div class="timestamp"><span class="live-dot"></span>LIVE<br>May 09, 2026<br>05:00 PM PST</div>
 </header>
 <main>
   <div class="card card-temp">
-    <div class="temp-big">29<span class="temp-unit">&deg;C</span></div>
+    <div class="temp-big">--<span class="temp-unit">&deg;C</span></div>
     <div class="temp-meta">
-      <div class="condition-label">Patchy rain nearby</div>
-      <div class="feels">Feels like 33&deg;C</div>
+      <div class="condition-label">Unknown</div>
+      <div class="feels">Feels like --&deg;C</div>
     </div>
   </div>
   <div class="card">
     <div class="card-label">Wind and Rain</div>
-    <div class="stat-row"><span class="stat-key">Wind Speed</span><span class="stat-val">8 km/h</span></div>
-    <div class="stat-row"><span class="stat-key">Direction</span><span class="stat-val">N</span></div>
-    <div class="stat-row"><span class="stat-key">Rain Chance</span><span class="stat-val">100%</span></div>
-    <div class="stat-row"><span class="stat-key">Cloud Cover</span><span class="stat-val">80%</span></div>
+    <div class="stat-row"><span class="stat-key">Wind Speed</span><span class="stat-val">-- km/h</span></div>
+    <div class="stat-row"><span class="stat-key">Direction</span><span class="stat-val">--</span></div>
+    <div class="stat-row"><span class="stat-key">Rain Chance</span><span class="stat-val">--%</span></div>
+    <div class="stat-row"><span class="stat-key">Cloud Cover</span><span class="stat-val">--%</span></div>
   </div>
   <div class="card">
     <div class="card-label">Atmosphere</div>
-    <div class="stat-row"><span class="stat-key">Humidity</span><span class="stat-val">78%</span></div>
-    <div class="stat-row"><span class="stat-key">UV Index</span><span class="stat-val">4</span></div>
-    <div class="stat-row"><span class="stat-key">High / Low</span><span class="stat-val">29&deg; / 24&deg;</span></div>
-    <div class="stat-row"><span class="stat-key">Pressure</span><span class="stat-val">1007 hPa</span></div>
-    <div class="stat-row"><span class="stat-key">Visibility</span><span class="stat-val">9 km</span></div>
+    <div class="stat-row"><span class="stat-key">Humidity</span><span class="stat-val">--%</span></div>
+    <div class="stat-row"><span class="stat-key">UV Index</span><span class="stat-val">--</span></div>
+    <div class="stat-row"><span class="stat-key">High / Low</span><span class="stat-val">--&deg; / --&deg;</span></div>
+    <div class="stat-row"><span class="stat-key">Pressure</span><span class="stat-val">-- hPa</span></div>
+    <div class="stat-row"><span class="stat-key">Visibility</span><span class="stat-val">-- km</span></div>
   </div>
   <div class="card card-broadcast">
     <div class="card-label">Live Broadcast</div>
-    <div class="broadcast-text">Good day, Iligan City. Here is your latest weather update. Current conditions show Patchy rain nearby, with a temperature of 29 degrees Celsius. It feels like 33 degrees outside. Humidity stands at 78 percent, with winds blowing from the N at 8 kilometers per hour. Visibility is at 9 kilometers, and the UV index is 4. For today, expect a high of 29 degrees and a low of 24 degrees. There is a 100 percent chance of rainfall today. Looking ahead to tomorrow, conditions are expected to be Patchy rain nearby, with a 100 percent chance of rain. Stay safe, and God bless Iligan City.</div>
+    <div class="broadcast-text">Weather data is currently unavailable. Please stand by.</div>
   </div>
 
   <!-- IGNF PROPRIETARY WEATHER MAP -->
@@ -165,14 +165,14 @@ footer{text-align:center;padding:1.5em;font-family:var(--mono);font-size:.68em;
 // ═══════════════════════════════════════════════════════
 
 const CURRENT = {
-  windDeg:  350.0,
-  windSpd:  8.0,
-  humidity: 78,
-  rain:     100,
-  temp:     29,
-  cloud:    80,
+  windDeg:  0.0,
+  windSpd:  0,
+  humidity: 0,
+  rain:     0,
+  temp:     28,
+  cloud:    0,
 };
-const HOURLY = [{"time": 0, "date": "2026-05-09", "temp": 24, "feels": 26, "humidity": 87, "wind": 6, "wind_deg": 159, "wind_dir": "SSE", "rain": 0, "cloud": 16, "desc": "Clear ", "precip": 0.0, "pressure": 1009, "vis": 10}, {"time": 3, "date": "2026-05-09", "temp": 24, "feels": 26, "humidity": 87, "wind": 6, "wind_deg": 153, "wind_dir": "SSE", "rain": 0, "cloud": 22, "desc": "Clear ", "precip": 0.0, "pressure": 1008, "vis": 10}, {"time": 6, "date": "2026-05-09", "temp": 24, "feels": 26, "humidity": 86, "wind": 6, "wind_deg": 146, "wind_dir": "SE", "rain": 0, "cloud": 17, "desc": "Sunny", "precip": 0.0, "pressure": 1009, "vis": 10}, {"time": 9, "date": "2026-05-09", "temp": 29, "feels": 33, "humidity": 70, "wind": 6, "wind_deg": 331, "wind_dir": "NNW", "rain": 0, "cloud": 28, "desc": "Partly Cloudy ", "precip": 0.0, "pressure": 1010, "vis": 10}, {"time": 12, "date": "2026-05-09", "temp": 29, "feels": 34, "humidity": 76, "wind": 10, "wind_deg": 339, "wind_dir": "NNW", "rain": 100, "cloud": 84, "desc": "Patchy rain nearby", "precip": 0.3, "pressure": 1008, "vis": 9}, {"time": 15, "date": "2026-05-09", "temp": 29, "feels": 33, "humidity": 78, "wind": 8, "wind_deg": 350, "wind_dir": "N", "rain": 100, "cloud": 80, "desc": "Patchy rain nearby", "precip": 1.1, "pressure": 1007, "vis": 9}, {"time": 18, "date": "2026-05-09", "temp": 27, "feels": 30, "humidity": 83, "wind": 3, "wind_deg": 355, "wind_dir": "N", "rain": 100, "cloud": 89, "desc": "Patchy rain nearby", "precip": 0.7, "pressure": 1008, "vis": 9}, {"time": 21, "date": "2026-05-09", "temp": 25, "feels": 27, "humidity": 89, "wind": 6, "wind_deg": 162, "wind_dir": "SSE", "rain": 100, "cloud": 84, "desc": "Light rain shower", "precip": 1.8, "pressure": 1010, "vis": 10}, {"time": 0, "date": "2026-05-10", "temp": 24, "feels": 27, "humidity": 88, "wind": 6, "wind_deg": 152, "wind_dir": "SSE", "rain": 81, "cloud": 85, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1009, "vis": 10}, {"time": 3, "date": "2026-05-10", "temp": 24, "feels": 26, "humidity": 88, "wind": 6, "wind_deg": 135, "wind_dir": "SE", "rain": 0, "cloud": 25, "desc": "Partly Cloudy ", "precip": 0.0, "pressure": 1008, "vis": 10}, {"time": 6, "date": "2026-05-10", "temp": 24, "feels": 27, "humidity": 88, "wind": 5, "wind_deg": 135, "wind_dir": "SE", "rain": 72, "cloud": 55, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1009, "vis": 10}, {"time": 9, "date": "2026-05-10", "temp": 29, "feels": 34, "humidity": 71, "wind": 4, "wind_deg": 358, "wind_dir": "N", "rain": 65, "cloud": 86, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1010, "vis": 10}, {"time": 12, "date": "2026-05-10", "temp": 29, "feels": 34, "humidity": 75, "wind": 13, "wind_deg": 340, "wind_dir": "NNW", "rain": 100, "cloud": 87, "desc": "Patchy rain nearby", "precip": 0.2, "pressure": 1009, "vis": 9}, {"time": 15, "date": "2026-05-10", "temp": 29, "feels": 33, "humidity": 72, "wind": 8, "wind_deg": 337, "wind_dir": "NNW", "rain": 100, "cloud": 79, "desc": "Patchy rain nearby", "precip": 0.5, "pressure": 1008, "vis": 9}, {"time": 18, "date": "2026-05-10", "temp": 27, "feels": 30, "humidity": 81, "wind": 1, "wind_deg": 332, "wind_dir": "NNW", "rain": 100, "cloud": 76, "desc": "Patchy rain nearby", "precip": 0.2, "pressure": 1009, "vis": 9}, {"time": 21, "date": "2026-05-10", "temp": 25, "feels": 27, "humidity": 84, "wind": 5, "wind_deg": 144, "wind_dir": "SE", "rain": 0, "cloud": 20, "desc": "Clear ", "precip": 0.0, "pressure": 1011, "vis": 10}, {"time": 0, "date": "2026-05-11", "temp": 25, "feels": 27, "humidity": 82, "wind": 5, "wind_deg": 155, "wind_dir": "SSE", "rain": 0, "cloud": 38, "desc": "Partly Cloudy ", "precip": 0.0, "pressure": 1010, "vis": 10}, {"time": 3, "date": "2026-05-11", "temp": 24, "feels": 27, "humidity": 83, "wind": 5, "wind_deg": 154, "wind_dir": "SSE", "rain": 88, "cloud": 74, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1009, "vis": 10}, {"time": 6, "date": "2026-05-11", "temp": 25, "feels": 27, "humidity": 83, "wind": 4, "wind_deg": 156, "wind_dir": "SSE", "rain": 62, "cloud": 85, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1010, "vis": 10}, {"time": 9, "date": "2026-05-11", "temp": 29, "feels": 33, "humidity": 70, "wind": 5, "wind_deg": 319, "wind_dir": "NW", "rain": 74, "cloud": 74, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1011, "vis": 10}, {"time": 12, "date": "2026-05-11", "temp": 30, "feels": 34, "humidity": 70, "wind": 9, "wind_deg": 319, "wind_dir": "NW", "rain": 100, "cloud": 87, "desc": "Patchy rain nearby", "precip": 0.3, "pressure": 1009, "vis": 9}, {"time": 15, "date": "2026-05-11", "temp": 29, "feels": 34, "humidity": 72, "wind": 9, "wind_deg": 337, "wind_dir": "NNW", "rain": 82, "cloud": 81, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1007, "vis": 10}, {"time": 18, "date": "2026-05-11", "temp": 27, "feels": 30, "humidity": 81, "wind": 2, "wind_deg": 9, "wind_dir": "N", "rain": 100, "cloud": 89, "desc": "Patchy rain nearby", "precip": 0.1, "pressure": 1009, "vis": 10}, {"time": 21, "date": "2026-05-11", "temp": 26, "feels": 28, "humidity": 84, "wind": 4, "wind_deg": 179, "wind_dir": "S", "rain": 86, "cloud": 71, "desc": "Patchy rain nearby", "precip": 0.0, "pressure": 1011, "vis": 10}];
+const HOURLY = [];
 
 const ILIGAN_CENTER = [8.228, 124.245];
 const DEFAULT_ZOOM  = 13;
